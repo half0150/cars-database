@@ -8,6 +8,8 @@ function isLicenseValid($license) {
 $showMessage = false;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $status = $_POST['Status'];
+    $LastInspectionDate = $_POST['LastInspectionDate'];
     $brand = $_POST['brand'];
     $model = $_POST['model'];
     $license = $_POST['license'];
@@ -15,12 +17,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $vinno = $_POST['vinno'];
     $mileage = $_POST['mileage'];
 
-    if (!empty($brand) || !empty($model) || !empty($license) || !empty($year) || !empty($vinno) || !empty($mileage)) {
+    if (!empty($status) || !empty($LastInspectionDate) || !empty($brand) || !empty($model) || !empty($license) || !empty($year) || !empty($vinno) || !empty($mileage)) {
         $showMessage = true;
 
         if (isLicenseValid($license)) {
-            $stmt = $conn->prepare("INSERT INTO cars (brand, model, year, license, vinno, mileage) VALUES (?, ?, ?, ?, ?, ?)");
-            $stmt->bind_param("ssssss", $brand, $model, $year, $license, $vinno, $mileage);
+            $stmt = $conn->prepare("INSERT INTO cars (Status, LastInspectionDate ,brand, model, year, license, vinno, mileage) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt->bind_param("ssssssss", $status, $LastInspectionDate, $brand, $model, $year, $license, $vinno, $mileage);
 
             if ($stmt->execute()) {
                 $message = "Car has been registered";
@@ -46,12 +48,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <body>
         <h1>Register a car</h1>
         <form action="cars.php" method="post">
+            <label>Status</label>
+            <input type="text" name="Status" placeholder="Skrottet">
+            <label>Last Inspection Date</label>
+            <input type="text" name="LastInspectionDate" placeholder="2023-01-30">
             <label>Brand</label>
             <input type="text" name="brand" placeholder="Audi">
             <label>Model</label>
             <input type="text" name="model" placeholder="A6">
             <label>Year</label>
-            <input type="number" name="year" placeholder="1999">
+            <input type="text" name="year" placeholder="2023-01-30">
             <label>License</label>
             <input type="text" name="license" placeholder="AA12345">
             <label>VIN</label>

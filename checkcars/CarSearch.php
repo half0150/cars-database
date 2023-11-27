@@ -79,13 +79,23 @@
             } else {
                 foreach ($result['data'] as $vehicle) {
                     echo '<div class="vehicle-card">';
+                    echo '<strong>Status:</strong> ' . $vehicle['status'] . '<br>';
+                    echo '<strong>Last Inspection Date:</strong> ' . $vehicle['last_inspection_date'] . '<br>';
+                    echo '<strong>Last Inspection Result:</strong> ' . $vehicle['last_inspection_result'] . '<br>';
                     echo '<strong>License Plate:</strong> ' . $vehicle['registration'] . '<br>';
                     echo '<strong>VIN:</strong> ' . $vehicle['vin'] . '<br>';
                     echo '<strong>Year:</strong> ' . $vehicle['first_registration_date'] . '<br>';
                     echo '<strong>Mileage:</strong> ' . $vehicle['mileage'] . ' km<br>';
+                    echo '<strong>Kind:</strong> ' . $vehicle['kind'] . '<br>';
+                    echo '<strong>Usage:</strong> ' . $vehicle['usage'] . '<br>';
+                    echo '<strong>Varient:</strong> ' . $vehicle['variant'] . '<br>';
                     echo '<strong>Brand:</strong> ' . $vehicle['brand'] . '<br>';
                     echo '<strong>Model:</strong> ' . $vehicle['model'] . '<br>';
+                    echo '<strong>Fuel Type:</strong> ' . $vehicle['fuel_type'] . '<br>';
                     echo '</div>';
+                    
+                    
+                    
                 }
             }
         }
