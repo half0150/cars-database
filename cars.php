@@ -1,14 +1,30 @@
 <?php
 require 'code/conn.php';
 
+function isLicenseValid($license) {
+    return preg_match("/^[A-Za-z]{2}[0-9]{5}$/", $license);
+}
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $brand = $_POST['brand'];
     $model = $_POST['model'];
     $license = $_POST['license'];
 
-    $sql = "INSERT INTO cars (brand, model, license) VALUES ('$brand', '$model', '$license')";
+    if (isLicenseValid($license)) {
+        $stmt = $conn->prepare("INSERT INTO cars (brand, model, license) VALUES (?, ?, ?)");
+        $stmt->bind_param("sss", $brand, $model, $license);
 
-    
+        if ($stmt->execute()) {
+            echo "Car has been registered";
+        } else {
+            echo "Error: " . $stmt->error;
+        }
+
+        $stmt->close();
+    } else {
+        echo "Invalid license format";
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -29,11 +45,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <button onclick="location.href='garage.php'">View Registered Cars</button>
 </body>
 </html>
-
-<?php if ($conn->query($sql) === TRUE) {
-        echo "Car has been registered";
-    } else {
-        echo "Error: " . $sql . $conn->error;
-    }
-}
-?>
