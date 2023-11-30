@@ -1,4 +1,4 @@
-<?php
+<?php //
 require 'code/conn.php';
 
 function isLicenseValid($license) {
@@ -10,6 +10,7 @@ $showMessage = false;
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $status = $_POST['Status'];
     $LastInspectionDate = $_POST['LastInspectionDate'];
+    $LastInspectionResult = $_POST['LastInspectionResult'];
     $brand = $_POST['brand'];
     $model = $_POST['model'];
     $license = $_POST['license'];
@@ -17,12 +18,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $vinno = $_POST['vinno'];
     $mileage = $_POST['mileage'];
 
-    if (!empty($status) || !empty($LastInspectionDate) || !empty($brand) || !empty($model) || !empty($license) || !empty($year) || !empty($vinno) || !empty($mileage)) {
+    if (!empty($status) || !empty($LastInspectionDate) || !empty($LastInspectionResult) || !empty($brand) || !empty($model) || !empty($license) || !empty($year) || !empty($vinno) || !empty($mileage)) {
         $showMessage = true;
 
         if (isLicenseValid($license)) {
-            $stmt = $conn->prepare("INSERT INTO cars (Status, LastInspectionDate ,brand, model, year, license, vinno, mileage) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-            $stmt->bind_param("ssssssss", $status, $LastInspectionDate, $brand, $model, $year, $license, $vinno, $mileage);
+            $stmt = $conn->prepare("INSERT INTO cars (Status, LastInspectionDate, LastInspectionResult ,brand, model, year, license, vinno, mileage) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt->bind_param("sssssssss", $status, $LastInspectionDate, $LastInspectionResult, $brand, $model, $year, $license, $vinno, $mileage);
 
             if ($stmt->execute()) {
                 $message = "Car has been registered";
@@ -52,6 +53,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <input type="text" name="Status" placeholder="Skrottet">
             <label>Last Inspection Date</label>
             <input type="text" name="LastInspectionDate" placeholder="2023-01-30">
+            <label>Last Inspection Result</label>
+            <input type="text" name="LastInspectionResult" placeholder="Godkendt">
             <label>Brand</label>
             <input type="text" name="brand" placeholder="Audi">
             <label>Model</label>
@@ -63,7 +66,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <label>VIN</label>
             <input type="text" name="vinno" placeholder="1ABCD23EF4G567891">
             <label>Mileage</label>
-            <input type="number" name="mileage" placeholder="111000 km">
+            <input type="number" name="mileage" placeholder="111000">
             <button type="submit">Register</button>
         </form>
 

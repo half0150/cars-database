@@ -32,7 +32,6 @@
     </head>
     <body>
 
-
         <form method="post">
             <label for="search">Enter License Plate or VIN:</label>
             <input type="text" id="search" name="search">
@@ -72,7 +71,6 @@
             curl_close($ch);
 
             $result = json_decode($response, true);
-            
 
             if ($result === null) {
                 echo 'Error decoding JSON response.';
@@ -82,23 +80,64 @@
                     echo '<strong>Status:</strong> ' . $vehicle['status'] . '<br>';
                     echo '<strong>Last Inspection Date:</strong> ' . $vehicle['last_inspection_date'] . '<br>';
                     echo '<strong>Last Inspection Result:</strong> ' . $vehicle['last_inspection_result'] . '<br>';
-                    echo '<strong>License Plate:</strong> ' . $vehicle['registration'] . '<br>';
-                    echo '<strong>VIN:</strong> ' . $vehicle['vin'] . '<br>';
-                    echo '<strong>Year:</strong> ' . $vehicle['first_registration_date'] . '<br>';
-                    echo '<strong>Mileage:</strong> ' . $vehicle['mileage'] . ' km<br>';
-                    echo '<strong>Kind:</strong> ' . $vehicle['kind'] . '<br>';
-                    echo '<strong>Usage:</strong> ' . $vehicle['usage'] . '<br>';
-                    echo '<strong>Varient:</strong> ' . $vehicle['variant'] . '<br>';
                     echo '<strong>Brand:</strong> ' . $vehicle['brand'] . '<br>';
                     echo '<strong>Model:</strong> ' . $vehicle['model'] . '<br>';
+                    echo '<strong>Year:</strong> ' . $vehicle['first_registration_date'] . '<br>';
+                    echo '<strong>License Plate:</strong> ' . $vehicle['registration'] . '<br>';
+                    echo '<strong>VIN:</strong> ' . $vehicle['vin'] . '<br>';
+                    echo '<strong>Mileage:</strong> ' . $vehicle['mileage'] . ' km<br>';
                     echo '<strong>Fuel Type:</strong> ' . $vehicle['fuel_type'] . '<br>';
+                    echo '<strong>Kind:</strong> ' . $vehicle['kind'] . '<br>';
+                    echo '<strong>Variant:</strong> ' . $vehicle['variant'] . '<br>';
+
+                    echo '<button id="btn" ';
+                    //ondoubleclick="addToDatabase(' . json_encode($vehicle) . ')"
+                            echo '>Add to Database</button>';
+
                     echo '</div>';
-                    
-                    
-                    
                 }
             }
         }
         ?>
+
+        <script>
+            const submitbutton = document.querySelector("#btn");
+            
+            
+            submitbutton.addEventListener("click", function(e){
+               addToDatabase(<?php echo json_encode($vehicle) ?>);
+            });
+            
+            function addToDatabase(vehicle) {
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState == 4) {
+                        if (xhr.status == 200) {
+                            alert(xhr.responseText);
+                        } else {
+                            alert('Error: ' + xhr.status);
+                        }
+                    }
+                };
+
+                xhr.open("POST", "../CarReg/insert_into_database.php", true);
+                xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+                let data = "Status=" + encodeURIComponent(vehicle.status) +
+                        "&LastInspectionDate=" + encodeURIComponent(vehicle.last_inspection_date) +
+                        "&LastInspectionResult=" + encodeURIComponent(vehicle.last_inspection_result) +
+                        "&brand=" + encodeURIComponent(vehicle.brand) +
+                        "&model=" + encodeURIComponent(vehicle.model) +
+                        "&year=" + encodeURIComponent(vehicle.first_registration_date) +
+                        "&license=" + encodeURIComponent(vehicle.registration) +
+                        "&vinno=" + encodeURIComponent(vehicle.vin) +
+                        "&mileage=" + encodeURIComponent(vehicle.mileage) +
+                        "&FuelType=" + encodeURIComponent(vehicle.fuel_type) +
+                        "&kind=" + encodeURIComponent(vehicle.kind) +
+                        "&variant=" + encodeURIComponent(vehicle.variant);
+
+                xhr.send(data);
+            }
+        </script>
     </body>
 </html>
