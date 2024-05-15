@@ -39,7 +39,7 @@
         </form>
 
         <?php
-        $api_key = 'sb_sk_34a670e7c3c9cdc7718a1dda2c11c5b7';
+        $api_key = 'api key goes here...';
         $endpoint = 'https://api.synsbasen.dk/v1/vehicles/search';
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
